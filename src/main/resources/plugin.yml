@@ -1,6 +1,6 @@
 name: SkyWars
 version: '1.0-SNAPSHOT'
-main: dev.netho.skyWars.SkyWars
+main: dev.netho.skywars.SkyWars
 api-version: '1.20'
 authors: [ Angelo Netho ]
 website: https://www.netho.dev

@@ -1,0 +1,9 @@
+required-players: 2
+countdown-seconds: 30
+lobby-spawn:
+  world: 'world'
+  x: 0
+  y: 0
+  z: 0
+  yaw: -90
+  pitch: 0
