@@ -1,0 +1,121 @@
+package dev.netho.skywars.instance;
+
+import dev.netho.skywars.SkyWars;
+import dev.netho.skywars.manager.ConfigManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class Arena {
+
+    private SkyWars plugin;
+
+    private int id;
+    private Location spawnLocation;
+
+    private GameState gameState;
+    private List<UUID> players;
+    private Countdown countdown;
+    private Game game;
+    public Arena(SkyWars plugin, int id, Location spawnLocation) {
+        this.plugin = plugin;
+        this.id = id;
+        this.spawnLocation = spawnLocation;
+
+        this.gameState = GameState.RECRUITING;
+        this.players = new ArrayList<>();
+        this.countdown = new Countdown(plugin, this);
+        this.game = new Game(this);
+    }
+
+    public void start() {
+        game.start();
+    }
+
+    public void reset(boolean kickPlayers) {
+        if(kickPlayers) {
+            Location location = ConfigManager.getLobbySpawn();
+            for(UUID uuid : players) {
+                Bukkit.getPlayer(uuid).teleport(location);
+            }
+            players.clear();
+        }
+
+        countdown.cancel();
+        countdown = new Countdown(plugin, this);
+        gameState = GameState.RECRUITING;
+
+
+    }
+
+    public void sendMessage(String message) {
+        for(UUID uuid : players) {
+            Bukkit.getPlayer(uuid).sendMessage(Component.text(message));
+        }
+    }
+
+    public void sendTitle(String title, String subtitle) {
+        Title titleComponent = Title.title(Component.text(title), Component.text(subtitle), Title.DEFAULT_TIMES);
+
+        for(UUID uuid : players) {
+            Player player = Bukkit.getPlayer(uuid);
+            if(player != null && player.isOnline()) {
+                Bukkit.getPlayer(uuid).showTitle(titleComponent);
+            }
+
+
+        }
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player.getUniqueId());
+        player.teleport(spawnLocation);
+
+        sendMessage(player.getName() + "joined the game");
+
+        if(gameState.equals(GameState.RECRUITING) && players.size() >= ConfigManager.getRequiredPlayers()) {
+            countdown.start();
+        }
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player.getUniqueId());
+        player.teleport(ConfigManager.getLobbySpawn());
+
+        if(gameState == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()) {
+            sendMessage("Not enough players. Countdown paused.");
+            reset(false);
+        }
+
+        if(gameState == GameState.LIVE && players.size() <= 1) {
+            reset(true);
+        }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public List<UUID> getPlayers() {
+        return players;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+}

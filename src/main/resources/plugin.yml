@@ -4,3 +4,6 @@ main: dev.netho.skywars.SkyWars
 api-version: '1.20'
 authors: [ Angelo Netho ]
 website: https://www.netho.dev
+commands:
+  arena:
+    usage: /<command>
