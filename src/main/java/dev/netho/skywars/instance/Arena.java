@@ -76,6 +76,19 @@ public class Arena {
         }
     }
 
+    public void sendActionBarMessage(TextComponent message) {
+        if(message != null) {
+            for(UUID uuid : players) {
+
+                Player player = Bukkit.getPlayer(uuid);
+
+                if(player != null) {
+                    player.sendActionBar(message);
+                }
+            }
+        }
+    }
+
     public void sendTitle(String title, String subtitle) {
         Title titleComponent = Title.title(Component.text(title), Component.text(subtitle), Title.DEFAULT_TIMES);
 
