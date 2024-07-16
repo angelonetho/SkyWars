@@ -27,7 +27,11 @@ public class ConnectListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Arena arena = plugin.getArenaManager().getArenaByPlayer(event.getPlayer());
-        arena.removePlayer(event.getPlayer());
+
+        if(arena != null) {
+            arena.removePlayer(event.getPlayer());
+        }
+
 
 
     }
