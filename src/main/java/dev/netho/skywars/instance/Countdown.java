@@ -2,12 +2,15 @@ package dev.netho.skywars.instance;
 
 import dev.netho.skywars.SkyWars;
 import dev.netho.skywars.manager.ConfigManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Countdown extends BukkitRunnable {
 
-    private SkyWars plugin;
-    private Arena arena;
+    private final SkyWars plugin;
+    private final Arena arena;
     private int countdownSeconds;
 
     public Countdown(SkyWars plugin, Arena arena) {
@@ -31,10 +34,14 @@ public class Countdown extends BukkitRunnable {
         }
 
         if(countdownSeconds <= 10 || countdownSeconds % 15 == 0) {
-            arena.sendMessage("A Partida começará em " + countdownSeconds + " segundo" + (countdownSeconds ==1 ? "" : "s") + ". ");
-        }
+            TextComponent countdownMessage = Component.text("The game will start in ", TextColor.fromHexString("#FF70C6")).append(Component.text(countdownSeconds, TextColor.fromHexString("#FF99D6"))).append(Component.text(" second" + (countdownSeconds == 1 ? "" : "s"), TextColor.fromHexString("#FF70C6")));
 
-        arena.sendTitle(countdownSeconds + " segundo" + (countdownSeconds == 1 ? "" : "s"), "até o jogo começar");
+            if(countdownSeconds % 5 == 0) {
+                arena.sendMessage(countdownMessage);
+            }
+
+            arena.sendActionBarMessage(countdownMessage);
+        }
 
         countdownSeconds--;
 
