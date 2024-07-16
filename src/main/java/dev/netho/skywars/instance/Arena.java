@@ -3,8 +3,9 @@ package dev.netho.skywars.instance;
 import dev.netho.skywars.SkyWars;
 import dev.netho.skywars.manager.ConfigManager;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
-import net.kyori.adventure.title.TitlePart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -55,9 +56,23 @@ public class Arena {
 
     }
 
+    @Deprecated
     public void sendMessage(String message) {
         for(UUID uuid : players) {
             Bukkit.getPlayer(uuid).sendMessage(Component.text(message));
+        }
+    }
+
+    public void sendMessage(TextComponent message) {
+        if(message != null) {
+            for(UUID uuid : players) {
+
+                Player player = Bukkit.getPlayer(uuid);
+
+                if(player != null) {
+                    player.sendMessage(message);
+                }
+            }
         }
     }
 
@@ -69,8 +84,6 @@ public class Arena {
             if(player != null && player.isOnline()) {
                 Bukkit.getPlayer(uuid).showTitle(titleComponent);
             }
-
-
         }
     }
 
@@ -78,7 +91,8 @@ public class Arena {
         players.add(player.getUniqueId());
         player.teleport(spawnLocation);
 
-        sendMessage(player.getName() + "joined the game");
+        TextComponent joinMessage = Component.empty().append(player.displayName()).append(Component.text(" joined the arena")).color(TextColor.fromHexString("#FF70C6"));
+        sendMessage(joinMessage);
 
         if(gameState.equals(GameState.RECRUITING) && players.size() >= ConfigManager.getRequiredPlayers()) {
             countdown.start();
