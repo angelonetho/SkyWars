@@ -5,9 +5,10 @@ import dev.netho.skywars.manager.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -89,15 +90,15 @@ public class Arena {
         }
     }
 
-    public void sendTitle(String title, String subtitle) {
-        Title titleComponent = Title.title(Component.text(title), Component.text(subtitle), Title.DEFAULT_TIMES);
+    public void playSound(Sound soundToPlay, float pitch) {
+        getPlayers().forEach(uuid -> {
 
-        for(UUID uuid : players) {
             Player player = Bukkit.getPlayer(uuid);
-            if(player != null && player.isOnline()) {
-                Bukkit.getPlayer(uuid).showTitle(titleComponent);
+
+            if(player != null) {
+                player.playSound(player.getLocation(), soundToPlay, SoundCategory.PLAYERS, 1.0f, pitch);
             }
-        }
+        });
     }
 
     public void addPlayer(Player player) {

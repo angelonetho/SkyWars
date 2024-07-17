@@ -5,6 +5,7 @@ import dev.netho.skywars.manager.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Countdown extends BukkitRunnable {
@@ -29,15 +30,21 @@ public class Countdown extends BukkitRunnable {
         if(countdownSeconds == 0) {
             cancel();
             arena.start();
-            arena.sendTitle("", "");
+            arena.playSound(Sound.ENTITY_PLAYER_LEVELUP, 0.5f);
+
             return;
         }
 
         if(countdownSeconds <= 10 || countdownSeconds % 15 == 0) {
-            TextComponent countdownMessage = Component.text("The game will start in ", TextColor.fromHexString("#FF70C6")).append(Component.text(countdownSeconds, TextColor.fromHexString("#FF99D6"))).append(Component.text(" second" + (countdownSeconds == 1 ? "" : "s"), TextColor.fromHexString("#FF70C6")));
+            TextComponent countdownMessage = Component.text("The game will start in ", TextColor.fromHexString("#FF70C6")).append(Component.text(countdownSeconds, TextColor.fromHexString("#FF99D6")))
+                    .append(Component.text(" second" + (countdownSeconds == 1 ? "" : "s"), TextColor.fromHexString("#FF70C6")));
 
             if(countdownSeconds % 5 == 0) {
                 arena.sendMessage(countdownMessage);
+            }
+
+            if(countdownSeconds <= 5) {
+                arena.playSound(Sound.BLOCK_NOTE_BLOCK_HARP, 1f);
             }
 
             arena.sendActionBarMessage(countdownMessage);
@@ -47,3 +54,4 @@ public class Countdown extends BukkitRunnable {
 
     }
 }
+
