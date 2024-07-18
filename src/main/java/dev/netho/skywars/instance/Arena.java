@@ -2,7 +2,6 @@ package dev.netho.skywars.instance;
 
 import dev.netho.skywars.SkyWars;
 import dev.netho.skywars.manager.ConfigManager;
-import dev.netho.skywars.util.MusicPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
@@ -27,7 +26,6 @@ public class Arena {
     private List<UUID> players;
     private Countdown countdown;
     private Game game;
-
     public Arena(SkyWars plugin, int id, Location spawnLocation) {
         this.plugin = plugin;
         this.id = id;
@@ -36,7 +34,7 @@ public class Arena {
         this.gameState = GameState.RECRUITING;
         this.players = new ArrayList<>();
         this.countdown = new Countdown(plugin, this);
-        this.game = new Game(this, plugin);
+        this.game = new Game(this);
     }
 
     public void start() {
