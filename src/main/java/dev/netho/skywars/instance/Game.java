@@ -1,6 +1,7 @@
 package dev.netho.skywars.instance;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 
@@ -19,7 +20,9 @@ public class Game {
 
     public void start() {
         arena.setGameState(GameState.LIVE);
-        arena.sendMessage("Game started");
+
+        TextComponent message = Component.text("Let the battle begin!", TextColor.fromHexString("#FF70C6"));
+        arena.sendMessage(message);
 
         for (UUID uuid : arena.getPlayers()) {
             points.put(uuid, 0);
@@ -29,7 +32,10 @@ public class Game {
     public void addPoint(Player player) {
         int playerPoints = points.get(player.getUniqueId()) + 1;
         if(playerPoints == 20) {
-            arena.sendMessage(player.getName() + " won the game");
+
+            TextComponent message = Component.text(player.getName() + " has won the game!", TextColor.fromHexString("#FF70C6"));
+            arena.sendMessage(message);
+
             arena.reset(true);
 
             return;

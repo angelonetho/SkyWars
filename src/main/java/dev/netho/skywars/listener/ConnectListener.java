@@ -22,6 +22,8 @@ public class ConnectListener implements Listener {
         Player player = event.getPlayer();
         player.teleport(ConfigManager.getLobbySpawn());
         player.setGameMode(GameMode.ADVENTURE);
+        player.setFoodLevel(20);
+        player.setHealth(20);
     }
 
     @EventHandler

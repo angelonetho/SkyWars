@@ -57,13 +57,6 @@ public class Arena {
 
     }
 
-    @Deprecated
-    public void sendMessage(String message) {
-        for(UUID uuid : players) {
-            Bukkit.getPlayer(uuid).sendMessage(Component.text(message));
-        }
-    }
-
     public void sendMessage(TextComponent message) {
         if(message != null) {
             for(UUID uuid : players) {
@@ -117,8 +110,12 @@ public class Arena {
         players.remove(player.getUniqueId());
         player.teleport(ConfigManager.getLobbySpawn());
 
-        if(gameState == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()) {
-            sendMessage("Not enough players. Countdown paused.");
+        int requiredPlayers = ConfigManager.getRequiredPlayers();
+
+        if(gameState == GameState.COUNTDOWN && players.size() < requiredPlayers) {
+
+            TextComponent message = Component.text("Waiting for more "+ (requiredPlayers - getPlayers().size()) + " player(s). Countdown suspended.", TextColor.fromHexString("#FBB360"));
+            sendMessage(message);
             reset(false);
         }
 
